@@ -2,9 +2,10 @@ require "sinatra"
 require "sinatra/reloader"
 require "dotenv/load"
 require "http"
+require "json"
 
 get("/") do
-  @raw_response = HTTP.get("https://api.exchangerate.host/list?access_key=#{ENV.fetch("EXCHANGE_RATE_KEY")}")
+  @raw_response = HTTP.get("https://api.exchangerate.host/list?access_key=#{ENV.fetch("EXCHANGE_RATE_KEY").chomp}")
 
   @string_response = @raw_response.to_s
 
@@ -18,7 +19,7 @@ end
 get("/:first_symbol") do 
   @the_symbol = params.fetch("first_symbol")
 
-  @url = "https:api.exchangerate.host/list?access_key=#{ENV.fetch("EXCHANGE_RATE_KEY").chomp}"
+  @url = "https://api.exchangerate.host/list?access_key=#{ENV.fetch("EXCHANGE_RATE_KEY").chomp}"
 
   @raw_response = HTTP.get(@url)
 
@@ -32,7 +33,7 @@ get("/:first_symbol") do
 end
 
 get("/:from_currency/:to_currency") do 
-    @from = params.feetch("from_currency")
+    @from = params.fetch("from_currency")
     @to = params.fetch("to_currency")
 
     @url = "https://api.exchangerate.host/convert?access_key=#{ENV.fetch("EXCHANGE_RATE_KEY").chomp}&from=#{@from}&to=#{@to}&amount=1"
